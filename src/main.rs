@@ -9,7 +9,8 @@ use rusty_pong::frame::{Drawable, new_frame};
 use rusty_pong::render::Renderer;
 use rusty_pong::terminal_renderer::TerminalRenderer;
 use rusty_pong::audio::{AudioClip, AudioPlayer};
-use rusty_pong::game_state::Movable;
+use rusty_pong::ball::Ball;
+use rusty_pong::game_state::{GameResult, Movable};
 use rusty_pong::player::{MoveState, Player};
 
 fn main() -> Result<()> { // Result<(), &'static dyn Error>{
@@ -21,9 +22,11 @@ fn main() -> Result<()> { // Result<(), &'static dyn Error>{
 
     let mut left = Player::new_left();
     let mut right = Player::new_right();
+    let mut ball = Ball::new();
 
     let mut last_frame = new_frame();
     let mut frame_start = Instant::now();
+    let mut game_result = GameResult::NONE;
     'gameloop: loop {
 
         let delta = frame_start.elapsed();
@@ -72,18 +75,37 @@ fn main() -> Result<()> { // Result<(), &'static dyn Error>{
         // update
         left.update(delta);
         right.update(delta);
+        ball.update(delta);
 
         // render
         let mut frame = new_frame();
         left.draw(&mut frame);
         right.draw(&mut frame);
+        ball.draw(&mut frame);
         renderer.render(&last_frame, &frame);
         last_frame = frame;
+
+        if let res @ (GameResult::LEFT | GameResult::RIGHT) = ball.game_over() {
+            game_result = res;
+            break 'gameloop;
+        }
 
         thread::sleep(Duration::from_millis(1));
     }
 
-    audio.play(AudioClip::Lose);
+    match game_result {
+        GameResult::LEFT => {
+            println!("LEFT WON!");
+            audio.play(AudioClip::Win);
+        },
+        GameResult::RIGHT => {
+            println!("RIGHT WON!");
+            audio.play(AudioClip::Win);
+        },
+        GameResult::NONE=> {
+            audio.play(AudioClip::Lose);
+        },
+    }
     audio.wait();
 
     Ok(())

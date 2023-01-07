@@ -8,7 +8,7 @@ use crate::game_state::Movable;
 use crate::position::Position;
 
 pub struct Player {
-    pos: Position,
+    pos: Position<usize>,
     score: u32,
     move_state: MoveState,
     move_timer: Timer,
