@@ -5,4 +5,7 @@ pub trait Renderer {
     fn new() -> Self;
 
     fn render(&mut self, last_frame: &Frame, cur_frame: &Frame);
+
+    fn redraw(&mut self);
+
 }
