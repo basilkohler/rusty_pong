@@ -1,0 +1,9 @@
+[package]
+name = "rusty_pong"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+crossterm = "0.25.0"
+rusty_audio = "1.4.0"
+rusty_time = "0.11.3"
