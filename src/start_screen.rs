@@ -13,12 +13,17 @@ pub fn start_screen(renderer: &mut TerminalRenderer, audio: &mut AudioPlayer) ->
 
     let start_frame = new_frame();
     renderer.render(&start_frame, &start_frame);
-    renderer.write_center("Udemy course rusty_engine game!\n\
+    renderer.write_center("Udemy course 'Ultimate Rust Course' game!\n\
                                \n\
-                               UP='W' DOWN='S' | UP=↑ DOWN=↓\n\
-                               Esc / 'q' to exit\n\
+                               UP='W' DOWN='S' | UP='↑' DOWN='↓'\n\
+                               ESC / 'q' to exit\n\
                                \n\
-                               Press any Key to start!".to_string());
+                               First to score 3 points wins!
+                               \n\
+                               Make sure the terminal window is large enough,\n\
+                               you should see a blue border at the bottom.\n\
+                               \n\
+                               Press any Key to start".to_string());
     renderer.redraw();
     loop {
         if event::poll(Duration::default())? {
