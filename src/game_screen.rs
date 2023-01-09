@@ -31,7 +31,6 @@ pub fn game_screen(renderer: &mut TerminalRenderer, audio: &mut AudioPlayer) -> 
             GameResult::LEFT => {
                 if score_board.score_left() == WIN_SCORE {
                     game_result = GameResult::LEFT;
-                    break 'gameloop;
                 } else {
                     audio.play(AudioClip::Explode);
                     ball = Ball::new();
@@ -40,7 +39,6 @@ pub fn game_screen(renderer: &mut TerminalRenderer, audio: &mut AudioPlayer) -> 
             GameResult::RIGHT => {
                 if score_board.score_right() == WIN_SCORE {
                     game_result = GameResult::RIGHT;
-                    break 'gameloop;
                 } else {
                     audio.play(AudioClip::Explode);
                     ball = Ball::new();
@@ -101,7 +99,11 @@ pub fn game_screen(renderer: &mut TerminalRenderer, audio: &mut AudioPlayer) -> 
         renderer.render(&last_frame, &frame);
         last_frame = frame;
 
-        thread::sleep(Duration::from_millis(1));
+        if let GameResult::NONE = game_result {
+            thread::sleep(Duration::from_millis(1));
+        } else {
+            break 'gameloop;
+        }
     }
     
     Ok(game_result)
