@@ -1,6 +1,5 @@
 use rusty_audio::prelude::*;
 
-
 pub struct AudioPlayer(Audio);
 
 impl AudioPlayer {
